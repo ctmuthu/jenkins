@@ -1,0 +1,23 @@
+- name: installing java
+  yum:
+    name: "{{ java11_rpm  }}"
+    state: present
+- name: add jenkins key
+  rpm_key:
+    state: present
+    key: "{{ jenkins_key_rpm  }}"
+- name: jenkins repo
+  yum_repository:
+    name: jenkins
+    description: jenkins for centos
+    baseurl: "{{ jenkins_repo_yum  }}"
+    gpgcheck: yes
+- name: install jenkins
+  yum:
+    name: jenkins
+    state: present
+- name: starting jenkins
+  service:
+    name: jenkins
+    state: started
+    enabled: yes

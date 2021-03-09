@@ -1,0 +1,7 @@
+---
+# vars file for jenkins
+
+#vars for RPM based
+java11_rpm: java-11-openjdk-devel
+jenkins_key_rpm: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+jenkins_repo_yum: https://pkg.jenkins.io/redhat-stable

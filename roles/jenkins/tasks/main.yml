@@ -1,0 +1,6 @@
+---
+# tasks file for jenkins
+
+- name: using centos file
+  include_tasks: centos.yml
+  when: ansible_distribution == "CentOS"
