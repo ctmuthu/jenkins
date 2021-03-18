@@ -1,2 +1,79 @@
 ---
 # defaults file for jenkins
+# List of plugins that should be present/installed
+jenkins_plugins_present: 
+        - name: greenballs
+          version: "1.15"
+# List of plugins that should be absent/uninstalled
+jenkins_plugins_absent: []
+# format:
+#  - name: [plugin-short-name]
+
+# Jenkins admin username
+jenkins_plugins_admin_username: admin
+
+# Path to the jenkins directory
+jenkins_plugins_jenkins_home: /var/lib/jenkins
+
+# Hostname of the jenkins instance
+jenkins_plugins_jenkins_hostname: localhost
+
+# HTTP port of the jenkins instance
+jenkins_plugins_jenkins_port: 8080
+
+# Url prefix of the jenkins instance, e.g. when running in tomcat
+jenkins_plugins_jenkins_url_prefix: ""
+
+# Path to the jenkins update directory
+jenkins_plugins_jenkins_update_dir: "{{ jenkins_plugins_jenkins_home }}/updates"
+
+# The base url of the jenkins instance
+jenkins_plugins_jenkins_base_url: "http://{{ jenkins_plugins_jenkins_hostname }}:{{ jenkins_plugins_jenkins_port }}{{ jenkins_plugins_jenkins_url_prefix }}"
+
+# Maximum seconds since the last jenkins plugin update check
+jenkins_plugins_updates_expiration: 86400
+
+# Timeout for jenkins update operation
+jenkins_plugins_updates_timeout: 60
+
+# Base URL to jenkins update site
+jenkins_plugins_updates_base_url: https://updates.jenkins.io
+
+# Complete URL to update-center.json
+jenkins_plugins_updates_update_site_url: "{{ jenkins_plugins_updates_base_url }}/update-center.json"
+
+# Download base URL for the jenkins plugins (you can point this to a local mirror to speed up plugin installation).
+jenkins_plugins_download_base_url: "{{ jenkins_plugins_updates_base_url }}"
+
+packages:
+  - "ansible"
+  - "azure-cli"
+  - "bind-utils"
+  - "bzip2"
+  - "curl"
+  - "dejavu-sans-fonts"
+  - "fontconfig"
+  - "freetype"
+  - "gcc-c++"
+  - "git"
+  - "initscripts"
+  - "iputils"
+  - "iptables-services"
+  - "java-1.8.0-openjdk-headless"
+  - "java-devel"
+  - "jq"
+  - "libselinux-python"
+  - "libsemanage-python"
+  - "make"
+  - "nginx"
+  - "openldap-clients"
+  - "openssl"
+  - "openssh-clients"
+  - "python"
+  - "tar"
+  - "tree"
+  - "traceroute"
+  - "unzip"
+  - "wget"
+  - "which"
+  - "zip"

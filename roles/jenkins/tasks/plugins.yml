@@ -1,0 +1,87 @@
+---
+#- name: Wait for Jenkins to start up
+#      uri:
+#        url: http://localhost:8080
+#        status_code: 200
+#        timeout: 5
+#      register: jenkins_service_status
+#      # Keep trying for 5 mins in 5 sec intervals
+#      retries: 60
+#      delay: 5
+#      until: >
+#         'status' in jenkins_service_status and
+#         jenkins_service_status['status'] == 200
+
+- name: Wait until Jenkins web interface is available
+  wait_for: 
+        host: localhost
+        port: 8080
+        state: present 
+        delay: 5
+        timeout: 300
+
+- name: Install/Manage Jenkins plugins.
+  jenkins_plugin:
+    name: "{{ item.key }}"
+    version: "{{ item.value['version'] | default(omit) }}"
+    jenkins_home: "{{ jenkins_plugins_jenkins_home }}"
+    url_username: "{{ jenkins_plugins_admin_username }}"
+    url_password: "{{ jenkins_plugins_admin_password }}"
+    state: "{{ item.value['state'] | default(present) }}"
+    timeout: "{{ jenkins_plugins_updates_timeout }}"
+    updates_url: "{{ jenkins_plugins_download_base_url }}"
+    updates_expiration: "{{ jenkins_plugins_updates_expiration }}"
+    url: "{{ jenkins_plugins_jenkins_base_url }}"
+
+- name: Uninstall Jenkins plugins.
+  uri:
+    url: "{{ jenkins_plugins_jenkins_base_url }}/pluginManager/plugin/{{ item.key }}/doUninstall"
+    timeout: "{{ jenkins_plugins_updates_timeout }}"
+    status_code: 302
+    method: POST
+    force_basic_auth: true
+    url_username: "{{ jenkins_plugins_admin_username }}"
+    url_password: "{{ jenkins_plugins_admin_password }}"
+    headers:
+      Jenkins-Crumb: '{{ jenkins_facts_csrf_crumb }}'
+      Cookie: '{{ jenkins_facts_cookie }}'
+  with_dict: "{{ jenkins_plugins_uninstall_plugins | default({}) }}"
+  changed_when: _jenkins_plugins_uninstall_result.status == 302
+  register: _jenkins_plugins_uninstall_result
+
+- name: Install github
+  jenkins_plugin:
+    name: github
+    state: latest
+    url_password: 8a7622296205418c938094651d71c848 
+    url: http://localhost:8080
+    url_username: admin
+
+- name: Install build-pipeline-plugin
+  jenkins_plugin:
+    name: build-pipeline-plugin
+    state: latest
+    url_password: 8a7622296205418c938094651d71c848 
+    url: http://localhost:8080
+    url_username: admin
+
+- name: Install nginx
+  jenkins_plugin:
+    name: nginx
+    state: latest
+    url_password: 8a7622296205418c938094651d71c848 
+    url: http://localhost:8080
+    url_username: admin
+
+- name: Install Blue Ocean
+  jenkins_plugin:
+    name: blueocean
+    state: latest
+    url_password: 8a7622296205418c938094651d71c848 
+    url: http://localhost:8080
+    url_username: admin
+
+- name: Restart Jenkins to make the plugin data available
+  service: 
+    name: jenkins
+    state: restarted
